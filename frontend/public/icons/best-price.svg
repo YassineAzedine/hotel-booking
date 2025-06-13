@@ -1,0 +1,8 @@
+<!-- public/icons/best-price.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M48 32l-16 16-16-16 16-16 16 16z" />
+  <circle cx="48" cy="16" r="4" />
+  <path d="M32 26v12" />
+  <path d="M28 32h8" />
+  <path d="M28 36h8" />
+</svg>

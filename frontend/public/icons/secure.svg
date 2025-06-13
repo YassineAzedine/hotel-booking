@@ -1,0 +1,5 @@
+<!-- public/icons/secure.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M32 2L12 10v14c0 14 12 26 20 30 8-4 20-16 20-30V10L32 2z" />
+  <path d="M22 30l8 8 12-16" />
+</svg>
