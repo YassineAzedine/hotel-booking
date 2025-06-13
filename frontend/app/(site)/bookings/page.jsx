@@ -1,4 +1,5 @@
 "use client";
+import api from "@/lib/axios";
 
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -11,49 +12,47 @@ export default function MyBookingsPage() {
   const bookingsPerPage = 5;
 
   useEffect(() => {
-    async function fetchBookings() {
-      try {
-        const token = localStorage.getItem("token"); // ou autre endroit où tu stockes le token
-        if (!token) {
-          console.warn("No token found, user not authenticated");
-          setBookings([]);
-          return;
-        }
+   
+async function fetchBookings() {
+  try {
+    const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:3000/bookings/my", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    console.log("token:", token);
 
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération des réservations");
-        }
-
-        const data = await response.json();
-
-        // Adapter le format reçu selon ta structure d'objet Booking
-        // Exemple supposé : 
-        // { id, room: { name }, startDate, endDate, status }
-        const adaptedBookings = data.map((b) => ({
-          id: b.id,
-          room: b.room?.title || "Chambre inconnue",
-          arrivalDate: new Date(b.startDate).toISOString().split("T")[0],
-          departureDate: new Date(b.endDate).toISOString().split("T")[0],
-          status:
-            b.status === "confirmed"
-              ? "Confirmée"
-              : b.status === "cancelled"
-              ? "Annulée"
-              : b.status, // ou autre mapping si besoin
-        }));
-
-        setBookings(adaptedBookings);
-      } catch (error) {
-        console.error(error);
-        setBookings([]);
-      }
+    if (!token) {
+      console.warn("No token found, user not authenticated");
+      setBookings([]);
+      return;
     }
+
+    const response = await api.get("/bookings/my", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = response.data; // ✅ Axios retourne la data directement ici
+    console.log("data:", data);
+
+    const adaptedBookings = data.map((b) => ({
+      id: b.id,
+      room: b.room?.title || "Chambre inconnue",
+      arrivalDate: new Date(b.startDate).toISOString().split("T")[0],
+      departureDate: new Date(b.endDate).toISOString().split("T")[0],
+      status:
+        b.status === "confirmed"
+          ? "Confirmée"
+          : b.status === "cancelled"
+          ? "Annulée"
+          : b.status,
+    }));
+
+    setBookings(adaptedBookings);
+  } catch (error) {
+    console.error("Erreur lors du fetch des réservations :", error);
+    setBookings([]);
+  }
+}
 
     fetchBookings();
   }, []);
@@ -151,32 +150,24 @@ console.log(currentBookings);
       buttons: [
         {
           label: 'Oui',
-          onClick: () => {
-            fetch(`http://localhost:3000/bookings/${booking.id}/cancel`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            })
-              .then((res) => {
-                if (!res.ok) {
-                  throw new Error("Erreur lors de l’annulation");
-                }
-                return res.json();
-              })
-              .then(() => {
-                toast.success("Réservation annulée avec succès ✅");
-                setBookings((prev) =>
-                  prev.map((b) =>
-                    b.id === booking.id ? { ...b, status: "Annulée" } : b
-                  )
-                );
-              })
-              .catch((err) => {
-                toast.error("Erreur : " + err.message);
-              });
-          }
+        onClick: () => {
+  api.patch(`/bookings/${booking.id}/cancel`, {}, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+  .then(() => {
+    toast.success("Réservation annulée avec succès ✅");
+    setBookings((prev) =>
+      prev.map((b) =>
+        b.id === booking.id ? { ...b, status: "Annulée" } : b
+      )
+    );
+  })
+  .catch((err) => {
+    toast.error("Erreur : " + (err.response?.data?.message || err.message));
+  });
+}
         },
         {
           label: 'Non',

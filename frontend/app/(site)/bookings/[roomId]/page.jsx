@@ -5,7 +5,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import axios from "axios";
+
+import api from "@/lib/axios";
+
 import { UserContext } from "@/context/UserContext"; // adapte le chemin
 
 export default function BookingDetailPage({ params }) {
@@ -55,7 +57,7 @@ const [errors, setErrors] = useState({});
 
   async function FindRoom() {
     try {
-      const res = await axios.get(`http://localhost:3000/rooms/${roomId}`);
+      const res = await api.get(`/rooms/${roomId}`);
       setRoom(res.data);
     } catch (error) {
       console.error("Failed to fetch room:", error);
@@ -95,8 +97,8 @@ const validationErrors = validate();
   }
 
   try {
-    const response = await axios.post(
-      "http://localhost:3000/bookings",
+    const response = await api.post(
+      "/bookings",
       {
         roomId: parseInt(roomId),
         userId : user.id , 

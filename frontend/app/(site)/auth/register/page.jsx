@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import api from "@/lib/axios";
 import { useRouter } from "next/navigation";
 export default function RegisterPage() {
    const router = useRouter();
@@ -30,7 +31,7 @@ export default function RegisterPage() {
 
     try {
       // Exemple d'endpoint, à adapter selon ton backend
-      const response = await axios.post("http://localhost:3000/auth/register", form);
+      const response = await api.post("/auth/register", form);
 
       console.log("Inscription réussie", response.data);
        // ✅ Redirection vers login ou home

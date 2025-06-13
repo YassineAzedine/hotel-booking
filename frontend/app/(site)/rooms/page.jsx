@@ -3,19 +3,30 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axios from "axios";
 import BookButton from "@/components/BookButton";
+import api from "@/lib/axios";
 export default function AllRoomsPage() {
   const [rooms, setRooms] = useState([]);
   const [searchCity, setSearchCity] = useState("");
   const [sortKey, setSortKey] = useState("");
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/rooms")
-      .then((res) => setRooms(res.data))
-      .catch((err) => {
-        console.error("Erreur lors du chargement des chambres :", err);
-      });
-  }, []);
+  console.log(rooms);
+  
+useEffect(() => {
+  api
+    .get("/rooms")
+    .then((res) => {
+      console.log("API Response:", res.data);
+      if (Array.isArray(res.data)) {
+        setRooms(res.data);
+      } else {
+        console.error("Données invalides : ce n'est pas un tableau", res.data);
+        setRooms([]); // fail-safe
+      }
+    })
+    .catch((err) => {
+      console.error("Erreur lors du chargement des chambres :", err);
+      setRooms([]); // fail-safe
+    });
+}, []);
 
 const filteredRooms = useMemo(() => {
   let filtered = rooms;

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "@/lib/axios";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -26,8 +27,8 @@ function ProfilePage() {
       return;
     }
 
-    axios
-      .get("http://localhost:3000/auth/profile", {
+    api
+      .get("/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -77,9 +78,9 @@ function ProfilePage() {
       return;
     }
 
-    axios
+    api
       .put(
-        "http://localhost:3000/auth/profile",
+        "/auth/profile",
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       )
