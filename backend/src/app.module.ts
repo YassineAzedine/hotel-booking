@@ -13,29 +13,27 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,  // rend ConfigModule accessible partout
+      isGlobal: true, // rend ConfigModule accessible partout
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: config.get<'mysql'>('DB_TYPE'),
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,  // à désactiver en prod
-      }),
-    }),
-  
-    RoomsModule , 
-    HotelsModule ,
+TypeOrmModule.forRootAsync({
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) => ({
+    type: 'postgres',
+    url: config.get<string>('DATABASE_URL'),
+    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    synchronize: true,
+    ssl: {
+      rejectUnauthorized: false,  // important pour Render car certificat auto-signé
+    },
+  }),
+}),
+
+    RoomsModule,
+    HotelsModule,
     UsersModule,
     BookingsModule,
-    AuthModule, // module pour les réservations
-    // autres modules
+    AuthModule,
   ],
 })
 export class AppModule {}
