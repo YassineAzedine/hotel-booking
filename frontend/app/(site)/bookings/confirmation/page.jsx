@@ -3,7 +3,7 @@ import BookingConfirmationClient from "./BookingConfirmationClient";
 
 export default function page() {
   return (
-    <Suspense fallback={<div>Chargement tous...</div>}>
+    <Suspense fallback={<div>Chargement...</div>}>
       <BookingConfirmationClient />
     </Suspense>
   );
