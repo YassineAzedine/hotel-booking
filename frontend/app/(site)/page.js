@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 export default function Home() {
   // Example: Animated typing effect for hero subtitle (advanced UX touch)
   const fullText = "Book the best hotels and rooms with ease and confidence.";
@@ -53,13 +53,13 @@ export default function Home() {
             {displayedText}
             <span className="blinking-cursor">|</span>
           </p>
-          <a
+          <Link
             href="/hotels"
             className="inline-block bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition px-10 py-4 rounded-xl text-lg font-semibold shadow-lg"
             aria-label="Explore hotels"
           >
             Explore Hotels
-          </a>
+          </Link>
         </div>
       </section>
 

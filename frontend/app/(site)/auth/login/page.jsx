@@ -93,12 +93,12 @@ export default function LoginPage() {
               <span>Se souvenir de moi</span>
             </label>
             <div className="text-sm">
-              <a
+              <Link
                 href="#"
                 className="font-medium text-indigo-600 hover:text-indigo-800"
               >
                 Mot de passe oublié ?
-              </a>
+              </Link>
             </div>
           </div>
           <button
